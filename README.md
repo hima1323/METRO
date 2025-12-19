@@ -18,11 +18,6 @@ Internally, the metro network is modeled as a **graph**:
 
 From the `METRO` directory:
 
-```bash
-cd /Users/prince_13/Documents/farzi/METRO
-g++ project.cpp -std=c++17 -o project
-./project
-```
 
 Make sure the following files stay in the **same folder** as `project.cpp` / `project`:
 
