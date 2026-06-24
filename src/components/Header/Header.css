@@ -1,0 +1,42 @@
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--header-h);
+  background: rgba(250,247,242,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0;
+  box-shadow: 0 2px 16px var(--shadow);
+}
+.header-brand {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 18px 0 16px;
+  border-right: 1px solid var(--border);
+  min-width: 170px; flex-shrink: 0;
+}
+.header-brand-text { line-height: 1.1; }
+.header-brand-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-weight: 700; color: var(--brown); letter-spacing: 0.01em;
+}
+.header-brand-sub { font-size: 0.6rem; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; }
+.header-cities { display: flex; align-items: center; flex: 1; overflow-x: auto; padding: 0 8px; gap: 2px; }
+.header-cities::-webkit-scrollbar { display: none; }
+.city-tab {
+  padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 500;
+  color: var(--text2); background: transparent; white-space: nowrap; transition: all 0.2s;
+  border: 1px solid transparent; letter-spacing: 0.02em;
+}
+.city-tab:hover { background: var(--bg3); color: var(--brown); }
+.city-tab.active { background: var(--brown); color: #fff; border-color: var(--brown); font-weight: 600; }
+.header-live {
+  display: flex; align-items: center; gap: 7px; padding: 0 16px;
+  font-size: 0.72rem; color: var(--text3); white-space: nowrap; border-left: 1px solid var(--border);
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #4caf50;
+  box-shadow: 0 0 0 0 rgba(76,175,80,0.4); animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(76,175,80,0); }
+}

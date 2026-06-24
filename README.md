@@ -1,16 +1,64 @@
-# React + Vite
+# India Metro Route Planner
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A premium, interactive web application that provides real-time metro navigation for **12 major Indian cities**. Built with a luxurious "Paradise Stay" aesthetic, this app blends clean UI design with complex graph routing algorithms and advanced AI capabilities to offer a smooth commuting experience.
 
-Currently, two official plugins are available:
+<p align="center">
+  <img src="public/screenshots/hero.png" width="800" alt="Hero Interface">
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Key Features
 
-## React Compiler
+- **12 Indian Cities Supported**: Delhi, Mumbai, Bengaluru, Chennai, Hyderabad, Kolkata, Kochi, Jaipur, Lucknow, Ahmedabad, Pune, and Nagpur.
+- **Advanced Graph Algorithms**: 
+  - **Dijkstra** (Min Cost / Min Distance)
+  - **BFS** (Fewest Stops)
+  - **A*** (Heuristic routing via geographic coordinates)
+- **AI Chat Assistant**: Ask queries like *"Gateway of India to Airport"* in natural language! Integrated with:
+  - **Ollama** (Local inference)
+  - **Groq API** (Cloud inference)
+  - Intelligent Rule-Based Fallback.
+- **Interactive Leaflet Map**: Visualizes the entire metro graph with edge weights, line colors, and animated route plotting.
+- **Luxurious UI**: Refined typography (*Playfair Display* & *Inter*), cream and brown color palette, glassmorphism, and custom SVG icons.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+<p align="center">
+  <img src="public/screenshots/cities.png" width="400" alt="Cities view">
+  <img src="public/screenshots/route_results.png" width="400" alt="Route Results">
+</p>
 
-## Expanding the Oxlint configuration
+## 🚀 Quick Start
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
+
+3. **Build for production**:
+   ```bash
+   npm run build
+   ```
+
+## 🧠 AI Configuration
+
+You can configure the AI backend inside the app. Click the settings icon in the AI Chat panel to switch between **Ollama (local)** or **Groq (cloud)** and provide your respective API keys or endpoints.
+
+<p align="center">
+  <img src="public/screenshots/ai_chat.png" width="400" alt="AI Chat Panel">
+</p>
+
+## 🛠️ Tech Stack
+
+- **React + Vite** for optimal rendering and development speed.
+- **Leaflet & React-Leaflet** for interactive mapping.
+- **Vanilla CSS** following BEM conventions for lightweight styling without CSS-in-JS overhead.
+
+## 🗃️ Legacy C++ Version
+
+The original terminal-based C++ implementation of the Metro Route planner can be found in the Git commit history of this repository.
+
+---
+*Created by Himanshu Patel*
