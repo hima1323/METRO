@@ -1,42 +1,115 @@
 .header {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  height: var(--header-h);
-  background: rgba(250,247,242,0.96);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 0;
-  box-shadow: 0 2px 16px var(--shadow);
+  height: var(--h);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-md);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 14px;
+  flex-shrink: 0;
+  z-index: 1000;
+  position: relative;
+  box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(60,30,10,0.06);
 }
-.header-brand {
-  display: flex; align-items: center; gap: 10px;
-  padding: 0 18px 0 16px;
-  border-right: 1px solid var(--border);
-  min-width: 170px; flex-shrink: 0;
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 16px;
+  border-right: 1px solid var(--border-md);
+  flex-shrink: 0;
 }
-.header-brand-text { line-height: 1.1; }
-.header-brand-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1rem; font-weight: 700; color: var(--brown); letter-spacing: 0.01em;
+
+.header-icon {
+  color: var(--brown);
+  display: flex;
+  animation: gentle-bob 4s ease-in-out infinite;
 }
-.header-brand-sub { font-size: 0.6rem; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; }
-.header-cities { display: flex; align-items: center; flex: 1; overflow-x: auto; padding: 0 8px; gap: 2px; }
-.header-cities::-webkit-scrollbar { display: none; }
+
+@keyframes gentle-bob {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+
+.header-brand { display: flex; flex-direction: column; }
+
+.header-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--brown);
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+
+.header-sub {
+  font-size: 0.55rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+}
+
+.city-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  overflow-x: auto;
+  padding: 0 12px;
+  scrollbar-width: none;
+}
+.city-tabs::-webkit-scrollbar { display: none; }
+
 .city-tab {
-  padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 500;
-  color: var(--text2); background: transparent; white-space: nowrap; transition: all 0.2s;
-  border: 1px solid transparent; letter-spacing: 0.02em;
+  flex-shrink: 0;
+  padding: 5px 13px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text3);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--tr);
+  white-space: nowrap;
 }
-.city-tab:hover { background: var(--bg3); color: var(--brown); }
-.city-tab.active { background: var(--brown); color: #fff; border-color: var(--brown); font-weight: 600; }
-.header-live {
-  display: flex; align-items: center; gap: 7px; padding: 0 16px;
-  font-size: 0.72rem; color: var(--text3); white-space: nowrap; border-left: 1px solid var(--border);
+
+.city-tab:hover {
+  color: var(--brown);
+  background: rgba(92,58,30,0.07);
+  border-color: var(--border-md);
 }
+
+.city-tab.active {
+  background: var(--brown);
+  border-color: var(--brown);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(92,58,30,0.3);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 14px;
+  border-left: 1px solid var(--border-md);
+  flex-shrink: 0;
+}
+
 .live-dot {
-  width: 7px; height: 7px; border-radius: 50%; background: #4caf50;
-  box-shadow: 0 0 0 0 rgba(76,175,80,0.4); animation: pulse-dot 2s infinite;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2s ease-in-out infinite;
 }
+
 @keyframes pulse-dot {
-  0%,100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
-  50% { box-shadow: 0 0 0 5px rgba(76,175,80,0); }
+  0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74,122,74,.4); }
+  50%      { opacity: .7; box-shadow: 0 0 0 4px rgba(74,122,74,0); }
 }
+
+.live-text { font-size: 0.68rem; color: var(--text3); font-weight: 500; }

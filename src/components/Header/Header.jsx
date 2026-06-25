@@ -1,39 +1,58 @@
 import './Header.css';
-import { METRO_CITIES } from '../../data/metroData';
 
-const TrainIcon = () => (
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{color:'var(--brown)'}}>
-    <rect x="4" y="3" width="16" height="13" rx="3"/>
-    <path d="M4 11h16M8 11V3M16 11V3"/>
-    <circle cx="8" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/>
-    <path d="M6.5 19h11M5 16l1.5 3M19 16l-1.5 3"/>
-  </svg>
-);
+const CITIES = [
+  { key: 'delhi',     label: 'Delhi'     },
+  { key: 'mumbai',    label: 'Mumbai'    },
+  { key: 'bengaluru', label: 'Bengaluru' },
+  { key: 'chennai',   label: 'Chennai'   },
+  { key: 'hyderabad', label: 'Hyderabad' },
+  { key: 'kolkata',   label: 'Kolkata'   },
+  { key: 'kochi',     label: 'Kochi'     },
+  { key: 'jaipur',    label: 'Jaipur'    },
+  { key: 'lucknow',   label: 'Lucknow'   },
+  { key: 'ahmedabad', label: 'Ahmedabad' },
+  { key: 'pune',      label: 'Pune'      },
+  { key: 'nagpur',    label: 'Nagpur'    },
+];
 
 export default function Header({ currentCity, onCityChange }) {
   return (
     <header className="header">
-      <div className="header-brand">
-        <TrainIcon />
-        <div className="header-brand-text">
-          <div className="header-brand-title">India Metro</div>
-          <div className="header-brand-sub">Route Planner</div>
+      {/* Brand */}
+      <div className="header-left">
+        <span className="header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
+            strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+            <rect x="3" y="3" width="18" height="13" rx="3"/>
+            <path d="M8 16l-2 4M16 16l2 4M8 16h8"/>
+            <circle cx="8.5" cy="10" r="1.2" fill="currentColor" stroke="none"/>
+            <circle cx="15.5" cy="10" r="1.2" fill="currentColor" stroke="none"/>
+            <line x1="3" y1="7" x2="21" y2="7"/>
+          </svg>
+        </span>
+        <div className="header-brand">
+          <span className="header-title">India Metro</span>
+          <span className="header-sub">Route Planner</span>
         </div>
       </div>
-      <nav className="header-cities">
-        {Object.entries(METRO_CITIES).map(([key, city]) => (
+
+      {/* City Tabs */}
+      <nav className="city-tabs">
+        {CITIES.map(c => (
           <button
-            key={key}
-            className={`city-tab${currentCity === key ? ' active' : ''}`}
-            onClick={() => onCityChange(key)}
+            key={c.key}
+            className={`city-tab${currentCity === c.key ? ' active' : ''}`}
+            onClick={() => onCityChange(c.key)}
           >
-            {city.name.split(' ')[0]}
+            {c.label}
           </button>
         ))}
       </nav>
-      <div className="header-live">
+
+      {/* Live indicator */}
+      <div className="header-right">
         <span className="live-dot" />
-        Live Network
+        <span className="live-text">Live Network</span>
       </div>
     </header>
   );

@@ -1,64 +1,72 @@
-# India Metro Route Planner
+# India Metro Route Planner 🚇
 
-A premium, interactive web application that provides real-time metro navigation for **12 major Indian cities**. Built with a luxurious "Paradise Stay" aesthetic, this app blends clean UI design with complex graph routing algorithms and advanced AI capabilities to offer a smooth commuting experience.
+A modern, high-performance web application to find optimal metro routes across 12 major Indian cities. Built entirely with React, Vite, and Leaflet. 
 
-<p align="center">
-  <img src="public/screenshots/hero.png" width="800" alt="Hero Interface">
-</p>
+![India Metro UI](public/screenshots/hero.png)
 
-## ✨ Key Features
+## 🌟 Features
 
-- **12 Indian Cities Supported**: Delhi, Mumbai, Bengaluru, Chennai, Hyderabad, Kolkata, Kochi, Jaipur, Lucknow, Ahmedabad, Pune, and Nagpur.
-- **Advanced Graph Algorithms**: 
-  - **Dijkstra** (Min Cost / Min Distance)
-  - **BFS** (Fewest Stops)
-  - **A*** (Heuristic routing via geographic coordinates)
-- **AI Chat Assistant**: Ask queries like *"Gateway of India to Airport"* in natural language! Integrated with:
-  - **Ollama** (Local inference)
-  - **Groq API** (Cloud inference)
-  - Intelligent Rule-Based Fallback.
-- **Interactive Leaflet Map**: Visualizes the entire metro graph with edge weights, line colors, and animated route plotting.
-- **Luxurious UI**: Refined typography (*Playfair Display* & *Inter*), cream and brown color palette, glassmorphism, and custom SVG icons.
+- **Multi-City Support**: Navigate metro networks in Delhi, Mumbai, Bengaluru, Chennai, Hyderabad, Kolkata, Kochi, Jaipur, Lucknow, Ahmedabad, Pune, and Nagpur.
+- **Smart Pathfinding algorithms**:
+  - **Dijkstra (Min Cost)** - Finds the cheapest route
+  - **Dijkstra (Min Distance)** - Finds the shortest route by track length
+  - **BFS (Fewest Stops)** - Finds the route with minimum station changes
+  - **A* (Heuristic)** - Uses geospatial haversine distance for rapid resolution
+- **Interactive Map**: Built on Leaflet with CartoDB Voyager tiles, fully dynamic polylines, and real-time station highlighting.
+- **Animated Routes**: Watch your journey map out station-by-station with smooth CSS/JS animations.
+- **AI Metro Assistant**:
+  - Integrated with **Ollama** (for local Llama 3 models) and **Groq** (for lightning-fast cloud LLM inference).
+  - Natural language querying: *"How do I get from India Gate to Red Fort?"*
+  - Rule-based fallback if no AI backend is configured.
+- **Paradise Stay Theme**: A luxurious, editorial-inspired UI utilizing a deep brown and cream color palette with premium typography (`Playfair Display` & `Inter`) and crisp SVG iconography.
 
-<p align="center">
-  <img src="public/screenshots/cities.png" width="400" alt="Cities view">
-  <img src="public/screenshots/route_results.png" width="400" alt="Route Results">
-</p>
+## 🛠 Tech Stack
+
+- **Frontend Framework**: React 19
+- **Build Tool**: Vite
+- **Mapping**: Leaflet (`react-leaflet`)
+- **Styling**: Vanilla CSS with Design Tokens
+- **AI Integration**: Ollama API, Groq API
 
 ## 🚀 Quick Start
 
-1. **Install dependencies**:
+Ensure you have Node.js (v18+) installed.
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/hima1323/METRO.git
+   cd METRO
+   ```
+
+2. **Install dependencies:**
    ```bash
    npm install
    ```
 
-2. **Run the development server**:
+3. **Start the development server:**
    ```bash
    npm run dev
    ```
+   The application will be available at `http://localhost:5173`.
 
-3. **Build for production**:
-   ```bash
-   npm run build
-   ```
+## 🤖 AI Assistant Setup
 
-## 🧠 AI Configuration
+The built-in AI assistant can understand landmarks and station names using natural language.
 
-You can configure the AI backend inside the app. Click the settings icon in the AI Chat panel to switch between **Ollama (local)** or **Groq (cloud)** and provide your respective API keys or endpoints.
+**Option 1: Ollama (Local & Free)**
+1. Install [Ollama](https://ollama.com/).
+2. Pull a small model: `ollama run llama3.2`
+3. In the app, click the AI FAB (bottom right) > Settings gear.
+4. Ensure the backend is set to "Ollama" and the URL is correct.
 
-<p align="center">
-  <img src="public/screenshots/ai_chat.png" width="400" alt="AI Chat Panel">
-</p>
+**Option 2: Groq (Cloud & Fast)**
+1. Get a free API key from [Groq](https://console.groq.com/).
+2. In the app's AI settings, enter your API key and set the backend to "Groq".
 
-## 🛠️ Tech Stack
+## 📁 Legacy Files
 
-- **React + Vite** for optimal rendering and development speed.
-- **Leaflet & React-Leaflet** for interactive mapping.
-- **Vanilla CSS** following BEM conventions for lightweight styling without CSS-in-JS overhead.
+The original C++ terminal-based implementation of this project has been archived in the `/legacy` folder for historical reference.
 
-## 🗃️ Legacy C++ Version
+## 📄 License
 
-The original terminal-based C++ implementation of the Metro Route planner can be found in the Git commit history of this repository.
-
----
-*Created by Himanshu Patel*
+This project is open-source.

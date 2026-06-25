@@ -1,48 +1,109 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import RouteResults from './RouteResults';
 import './SidePanel.css';
 
-const SVG_ICONS = {
-  pin: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="28" height="28"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>,
-  dCost: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="22" height="22"><line x1="12" y1="2" x2="12" y2="22"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>,
-  dDist: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="22" height="22"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>,
-  bfs: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="22" height="22"><circle cx="12" cy="5" r="3"></circle><circle cx="6" cy="19" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="10.5" y1="7.5" x2="7.5" y2="16.5"></line><line x1="13.5" y1="7.5" x2="16.5" y2="16.5"></line></svg>,
-  astar: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="22" height="22"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>,
-  swap: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="14" x2="21" y2="3"></line><polyline points="8 21 3 21 3 16"></polyline><line x1="20" y1="10" x2="3" y2="21"></line></svg>,
-  chevron: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>,
-  time: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-  stops: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
-};
+/* ── SVG Icons ─────────────────────────── */
+const IcoRupee = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" width="19" height="19">
+    <path d="M6 3h12M6 8h12M6 21l7-13 7 13"/><path d="M6 12h7a4 4 0 0 1 0 8H6"/>
+  </svg>
+);
+const IcoRoad = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" width="19" height="19">
+    <path d="M3 12h18M3 6l3 6-3 6M21 6l-3 6 3 6"/>
+  </svg>
+);
+const IcoGraph = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" width="19" height="19">
+    <circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/>
+    <line x1="12" y1="7" x2="5" y2="17"/><line x1="12" y1="7" x2="19" y2="17"/><line x1="5" y1="19" x2="19" y2="19"/>
+  </svg>
+);
+const IcoTarget = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" width="19" height="19">
+    <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>
+    <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
+    <line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>
+  </svg>
+);
+const IcoSwap = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" width="14" height="14">
+    <path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
+  </svg>
+);
+const IcoArrow = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" width="14" height="14">
+    <path d="M5 12h14M12 5l7 7-7 7"/>
+  </svg>
+);
+const IcoSpin = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+    className="spin" width="14" height="14">
+    <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+  </svg>
+);
+const IcoMapPin = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="26" height="26">
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+    <circle cx="12" cy="9" r="2.5"/>
+  </svg>
+);
 
-function AutocompleteInput({ value, onChange, onSelect, placeholder, iconColor, stations, disabled }) {
+const ALGOS = [
+  { key: 'dijkstra-cost', label: 'Dijkstra', sub: 'Min Cost',     Icon: IcoRupee },
+  { key: 'dijkstra-dist', label: 'Dijkstra', sub: 'Min Distance', Icon: IcoRoad  },
+  { key: 'bfs',           label: 'BFS',      sub: 'Fewest Stops', Icon: IcoGraph },
+  { key: 'astar',         label: 'A*',        sub: 'Heuristic',   Icon: IcoTarget},
+];
+
+/* ── Autocomplete Input ─────────────────── */
+function StationInput({ id, placeholder, value, onChange, onSelect, stations }) {
   const [open, setOpen] = useState(false);
-  const ref = useRef();
-  
+  const [filtered, setFiltered] = useState([]);
+  const wrapRef = useRef(null);
+
+  const handleChange = (e) => {
+    const v = e.target.value;
+    onChange(v);
+    if (v.length > 0) {
+      const q = v.toLowerCase();
+      const results = Object.entries(stations)
+        .filter(([, s]) => s[0].toLowerCase().includes(q))
+        .slice(0, 8);
+      setFiltered(results);
+      setOpen(results.length > 0);
+    } else {
+      setOpen(false);
+    }
+  };
+
   useEffect(() => {
-    const click = e => { if(ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener('mousedown', click);
-    return () => document.removeEventListener('mousedown', click);
+    const handler = (e) => { if (!wrapRef.current?.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const stList = Object.entries(stations).map(([k,v]) => ({ key: k, name: v[0] }));
-  const filtered = value ? stList.filter(s => s.name.toLowerCase().includes(value.toLowerCase())) : [];
-
   return (
-    <div className="input-group" ref={ref}>
-      <div className={`dot-icon ${iconColor}`} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', zIndex: 10 }} />
+    <div className="ac-wrap" ref={wrapRef}>
       <input
-        className="stn-input"
+        id={id}
         type="text"
+        className="station-input"
         placeholder={placeholder}
         value={value}
-        onChange={e => { onChange(e.target.value); setOpen(true); }}
-        onFocus={() => setOpen(true)}
-        disabled={disabled}
+        onChange={handleChange}
+        onFocus={() => { if (filtered.length > 0) setOpen(true); }}
+        autoComplete="off"
       />
-      {open && filtered.length > 0 && (
-        <div className="autocomplete-dropdown">
-          {filtered.slice(0, 8).map(s => (
-            <div key={s.key} className="ac-item" onClick={() => { onSelect(s.key, s.name); setOpen(false); }}>
-              {s.name}
+      {open && (
+        <div className="dropdown open">
+          {filtered.map(([k, s]) => (
+            <div key={k} className="dropdown-item" onMouseDown={() => {
+              onSelect(k, s[0]);
+              setOpen(false);
+            }}>
+              <span className="color-pip" style={{ background: '#8b5e38' }} />
+              {s[0]}
             </div>
           ))}
         </div>
@@ -51,118 +112,134 @@ function AutocompleteInput({ value, onChange, onSelect, placeholder, iconColor, 
   );
 }
 
-export default function SidePanel({ city, cityKey, algo, setAlgo, source, setSource, dest, setDest, routeResult, isAnimating }) {
-  const [collapsed, setCollapsed] = useState(false);
-  const stCount = Object.keys(city.stations).length;
-  const lineCount = Object.keys(city.lines).length;
+/* ── Main SidePanel ─────────────────────── */
+export default function SidePanel({
+  collapsed, onToggle,
+  cityData, currentCity,
+  onFindRoute, result, isAnimating,
+}) {
+  const [srcKey, setSrcKey] = useState('');
+  const [srcLabel, setSrcLabel] = useState('');
+  const [destKey, setDestKey] = useState('');
+  const [destLabel, setDestLabel] = useState('');
+  const [algo, setAlgo] = useState('dijkstra-cost');
+  const [loading, setLoading] = useState(false);
+
+  // Reset when city changes
+  useEffect(() => {
+    setSrcKey(''); setSrcLabel('');
+    setDestKey(''); setDestLabel('');
+  }, [currentCity]);
 
   const handleSwap = () => {
-    const s = { ...source }, d = { ...dest };
-    setSource(d); setDest(s);
+    setSrcKey(destKey);   setSrcLabel(destLabel);
+    setDestKey(srcKey);   setDestLabel(srcLabel);
   };
 
+  const handleFind = useCallback(async () => {
+    if (!srcKey || !destKey || isAnimating) return;
+    setLoading(true);
+    await onFindRoute(srcKey, destKey, algo);
+    setLoading(false);
+  }, [srcKey, destKey, algo, isAnimating, onFindRoute]);
+
+  const stations = cityData?.stations || {};
+  const lineCount = cityData ? Object.keys(cityData.lines || {}).length : 0;
+  const stCount   = Object.keys(stations).length;
+
   return (
-    <div className="panel-wrapper">
-      <div className={`city-badge ${collapsed ? 'collapsed' : ''}`}>
-        <div className="city-badge-icon">{SVG_ICONS.pin}</div>
-        <div className="city-badge-info">
-          <div className="city-badge-name">{city.name}</div>
-          <div className="city-badge-lines">{lineCount} Line{lineCount!==1?'s':''} · {stCount} Station{stCount!==1?'s':''}</div>
-        </div>
-      </div>
-
-      <button className="panel-toggle-btn" onClick={() => setCollapsed(!collapsed)}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{transform: collapsed ? 'rotate(180deg)' : 'none', transition: '0.3s'}}>
-          <path d="M15 18l-6-6 6-6"/>
+    <>
+      {/* Panel toggle tab */}
+      <div className="panel-toggle" onClick={onToggle} title="Toggle sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <path d={collapsed ? 'M9 18l6-6-6-6' : 'M15 18l-6-6 6-6'}/>
         </svg>
-      </button>
-
-      <div className={`route-card ${collapsed ? 'collapsed' : ''}`}>
-        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <AutocompleteInput
-            value={source.name}
-            onChange={v => setSource({ key: null, name: v })}
-            onSelect={(k, n) => setSource({ key: k, name: n })}
-            placeholder="Source station..."
-            iconColor="green"
-            stations={city.stations}
-            disabled={isAnimating}
-          />
-          <button className="swap-btn" onClick={handleSwap} disabled={isAnimating}>{SVG_ICONS.swap}</button>
-          <AutocompleteInput
-            value={dest.name}
-            onChange={v => setDest({ key: null, name: v })}
-            onSelect={(k, n) => setDest({ key: k, name: n })}
-            placeholder="Destination station..."
-            iconColor="red"
-            stations={city.stations}
-            disabled={isAnimating}
-          />
-        </div>
-
-        <div className="algo-section">
-          <div className="algo-title">Algorithm</div>
-          <div className="algo-grid">
-            <button className={`algo-btn ${algo==='dijkstra-cost'?'active':''}`} onClick={()=>setAlgo('dijkstra-cost')} disabled={isAnimating}>
-              <div className="algo-ico">{SVG_ICONS.dCost}</div>
-              <div className="algo-n">Dijkstra</div><div className="algo-d">Min Cost</div>
-            </button>
-            <button className={`algo-btn ${algo==='dijkstra-dist'?'active':''}`} onClick={()=>setAlgo('dijkstra-dist')} disabled={isAnimating}>
-              <div className="algo-ico">{SVG_ICONS.dDist}</div>
-              <div className="algo-n">Dijkstra</div><div className="algo-d">Min Distance</div>
-            </button>
-            <button className={`algo-btn ${algo==='bfs'?'active':''}`} onClick={()=>setAlgo('bfs')} disabled={isAnimating}>
-              <div className="algo-ico">{SVG_ICONS.bfs}</div>
-              <div className="algo-n">BFS</div><div className="algo-d">Fewest Stops</div>
-            </button>
-            <button className={`algo-btn ${algo==='astar'?'active':''}`} onClick={()=>setAlgo('astar')} disabled={isAnimating}>
-              <div className="algo-ico">{SVG_ICONS.astar}</div>
-              <div className="algo-n">A*</div><div className="algo-d">Heuristic</div>
-            </button>
-          </div>
-        </div>
       </div>
 
-      {routeResult && routeResult.path.length > 0 && (
-        <div className={`route-results ${collapsed ? 'collapsed' : ''}`}>
-          <div className="stats-grid">
-            <div className="stat-box">
-              <div className="stat-v">{SVG_ICONS.dCost} &#8377;{routeResult.cost}</div>
-              <div className="stat-l">Total Cost</div>
-            </div>
-            <div className="stat-box">
-              <div className="stat-v">{SVG_ICONS.dDist} {routeResult.distance.toFixed(1)}</div>
-              <div className="stat-l">Km Distance</div>
-            </div>
-            <div className="stat-box">
-              <div className="stat-v">{SVG_ICONS.time} {Math.round((routeResult.distance/30)*60)}</div>
-              <div className="stat-l">Minutes</div>
-            </div>
-            <div className="stat-box">
-              <div className="stat-v">{SVG_ICONS.stops} {routeResult.path.length-1}</div>
-              <div className="stat-l">Stops</div>
+      <aside className={`side-panel${collapsed ? ' collapsed' : ''}`}>
+        <div className="panel-inner">
+
+          {/* City badge */}
+          <div className="city-badge">
+            <span className="city-badge-icon"><IcoMapPin /></span>
+            <div>
+              <p className="city-badge-name serif">{cityData?.name || 'Select City'}</p>
+              <p className="city-badge-lines">{lineCount} Lines · {stCount} Stations</p>
             </div>
           </div>
-          <div>
-            {routeResult.path.map((node, i) => {
-              const st = city.stations[node];
-              const isLast = i === routeResult.path.length - 1;
-              const line = city.lines[st[2]];
-              return (
-                <div key={i} className="path-step">
-                  <div className="step-line">
-                    <div className="step-dot" style={{ background: line.color, borderColor: isLast ? line.color : '#fff' }} />
-                  </div>
-                  <div className="step-info" style={{ borderBottom: isLast ? 'none' : undefined }}>
-                    <div className="step-name">{st[0]}</div>
-                    <div className="step-meta"><span style={{ color: line.color, fontWeight: 600 }}>{line.name}</span></div>
-                  </div>
-                </div>
-              );
-            })}
+
+          {/* Route form */}
+          <div className="route-box">
+            <div className="field-group">
+              <label className="field-label">
+                <span className="dot dot-green"/>From
+              </label>
+              <StationInput
+                id="src-input"
+                placeholder="Source station…"
+                value={srcLabel}
+                onChange={setSrcLabel}
+                onSelect={(k, n) => { setSrcKey(k); setSrcLabel(n); }}
+                stations={stations}
+              />
+            </div>
+
+            <div className="swap-row">
+              <button className="swap-btn" onClick={handleSwap} title="Swap">
+                <IcoSwap />
+              </button>
+            </div>
+
+            <div className="field-group">
+              <label className="field-label">
+                <span className="dot dot-red"/>To
+              </label>
+              <StationInput
+                id="dest-input"
+                placeholder="Destination station…"
+                value={destLabel}
+                onChange={setDestLabel}
+                onSelect={(k, n) => { setDestKey(k); setDestLabel(n); }}
+                stations={stations}
+              />
+            </div>
           </div>
+
+          {/* Algorithm grid */}
+          <div className="algo-section">
+            <p className="section-label">Algorithm</p>
+            <div className="algo-grid">
+              {ALGOS.map(a => (
+                <button
+                  key={a.key}
+                  className={`algo-btn${algo === a.key ? ' active' : ''}`}
+                  onClick={() => setAlgo(a.key)}
+                >
+                  <span className="algo-ico"><a.Icon /></span>
+                  <span className="algo-n">{a.label}</span>
+                  <span className="algo-d">{a.sub}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Find Route button */}
+          <button
+            className={`find-btn${loading || isAnimating ? ' loading' : ''}`}
+            onClick={handleFind}
+            disabled={!srcKey || !destKey || loading || isAnimating}
+          >
+            <span>{loading || isAnimating ? 'Finding…' : 'Find Route'}</span>
+            {loading || isAnimating ? <IcoSpin /> : <IcoArrow />}
+          </button>
+
+          {/* Results */}
+          {result && (
+            <RouteResults result={result} algo={algo} cityData={cityData} srcKey={srcKey} destKey={destKey} />
+          )}
+
         </div>
-      )}
-    </div>
+      </aside>
+    </>
   );
 }

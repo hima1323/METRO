@@ -1,79 +1,90 @@
-import { useState, useEffect } from 'react';
-import './App.css';
+import { useState, useCallback, useRef } from 'react';
 import Header from './components/Header/Header';
-import MapView from './components/MapView/MapView';
 import SidePanel from './components/SidePanel/SidePanel';
+import MapView from './components/MapView/MapView';
 import AIChat from './components/AIChat/AIChat';
 import { METRO_CITIES } from './data/metroData';
 import { useMetroGraph } from './hooks/useMetroGraph';
 import { useAIChat } from './hooks/useAIChat';
 
-function App() {
-  const [cityKey, setCityKey] = useState('delhi');
-  const [algo, setAlgo] = useState('dijkstra-cost');
-  const [source, setSource] = useState({ key: null, name: '' });
-  const [dest, setDest] = useState({ key: null, name: '' });
+export default function App() {
+  const [currentCity, setCurrentCity] = useState('delhi');
+  const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [routeResult, setRouteResult] = useState(null);
+  
+  const cityData = METRO_CITIES[currentCity];
 
-  const cityData = METRO_CITIES[cityKey];
-  const { findRoute, animatePath, clearAnimation, animatedPath, isAnimating } = useMetroGraph();
-  const { messages, sendMessage, isTyping, aiCfg, saveCfg } = useAIChat(cityKey, cityData, (src, dst) => findRoute(cityData, src, dst, algo));
+  const {
+    findRoute: graphFindRoute,
+    animatePath,
+    clearAnimation,
+    animatedPath,
+    isAnimating
+  } = useMetroGraph();
 
-  useEffect(() => {
-    setSource({ key: null, name: '' });
-    setDest({ key: null, name: '' });
+  // Wrap findRoute to handle animations & state
+  const handleFindRoute = useCallback(async (src, dest, algo) => {
+    clearAnimation();
+    setRouteResult(null);
+    
+    // Simulate slight delay for effect
+    await new Promise(r => setTimeout(r, 400));
+    
+    const res = graphFindRoute(cityData, src, dest, algo);
+    setRouteResult(res);
+    
+    if (res && res.path.length > 0) {
+      animatePath(res.path);
+      // Auto-collapse panel on mobile to show map
+      if (window.innerWidth <= 768) setPanelCollapsed(true);
+    }
+    
+    return res;
+  }, [cityData, graphFindRoute, animatePath, clearAnimation]);
+
+  const chat = useAIChat(currentCity, cityData, (src, dest) => {
+    // LLM found a route, just return the raw data, don't auto-animate yet
+    return graphFindRoute(cityData, src, dest, 'dijkstra-cost');
+  });
+
+  const handleApplyRoute = useCallback(async (src, dest) => {
+    // When user clicks "Show on Map" from AI chat
+    setPanelCollapsed(false);
+    await handleFindRoute(src, dest, 'dijkstra-cost');
+  }, [handleFindRoute]);
+
+  const handleCityChange = useCallback((newCity) => {
+    setCurrentCity(newCity);
     setRouteResult(null);
     clearAnimation();
-  }, [cityKey, clearAnimation]);
-
-  useEffect(() => {
-    if (source.key && dest.key && source.key !== dest.key) {
-      const res = findRoute(cityData, source.key, dest.key, algo);
-      setRouteResult(res);
-      if (res && res.path) animatePath(res.path);
-    } else {
-      setRouteResult(null);
-      clearAnimation();
-    }
-  }, [source.key, dest.key, algo, cityData, findRoute, animatePath, clearAnimation]);
-
-  const handleApplyRoute = (from, to) => {
-    setSource(from);
-    setDest(to);
-  };
+  }, [clearAnimation]);
 
   return (
-    <div className="app-layout">
-      <Header currentCity={cityKey} onCityChange={setCityKey} />
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw' }}>
+      <Header currentCity={currentCity} onCityChange={handleCityChange} />
       
-      <MapView 
-        city={cityData} 
-        animatedPath={animatedPath} 
-      />
-      
-      <SidePanel
-        city={cityData}
-        cityKey={cityKey}
-        algo={algo}
-        setAlgo={setAlgo}
-        source={source}
-        setSource={setSource}
-        dest={dest}
-        setDest={setDest}
-        routeResult={routeResult}
-        isAnimating={isAnimating}
-      />
-
-      <AIChat
-        messages={messages}
-        sendMessage={sendMessage}
-        isTyping={isTyping}
-        aiCfg={aiCfg}
-        saveCfg={saveCfg}
-        onApplyRoute={handleApplyRoute}
-      />
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
+        <SidePanel 
+          collapsed={panelCollapsed}
+          onToggle={() => setPanelCollapsed(!panelCollapsed)}
+          cityData={cityData}
+          currentCity={currentCity}
+          onFindRoute={handleFindRoute}
+          result={routeResult}
+          isAnimating={isAnimating}
+        />
+        
+        <MapView 
+          cityData={cityData} 
+          result={routeResult} 
+          animatedPath={animatedPath} 
+        />
+        
+        <AIChat 
+          chat={chat} 
+          onApplyRoute={handleApplyRoute} 
+        />
+      </div>
     </div>
   );
 }
-
-export default App;

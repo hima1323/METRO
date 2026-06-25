@@ -1,0 +1,48 @@
+/* ═══════════════════════════════════════
+   India Metro — Global Styles
+   ═══════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import './variables.css';
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text1);
+}
+
+/* Leaflet CSS override for theme */
+.leaflet-tile-pane { filter: saturate(0.75) sepia(0.15) brightness(0.95); }
+.leaflet-container { background: #f0ebe0; }
+.leaflet-control-zoom a {
+  background: var(--bg-white) !important;
+  color: var(--brown) !important;
+  border-color: var(--border-md) !important;
+  font-weight: 700;
+}
+.leaflet-control-zoom a:hover { background: var(--brown) !important; color: #fff !important; }
+.leaflet-attribution { display: none; }
+.leaflet-popup-content-wrapper {
+  background: var(--bg-white);
+  border: 1px solid var(--border-md);
+  border-radius: var(--r);
+  box-shadow: 0 12px 40px rgba(60,30,10,0.18);
+  color: var(--text1);
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+.leaflet-popup-content { margin: 12px 16px; }
+.leaflet-popup-tip { background: var(--bg-white) !important; }
+.leaflet-popup-close-button { color: var(--text3) !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--sand); border-radius: 2px; }
+* { scrollbar-width: thin; scrollbar-color: var(--sand) transparent; }
+
+/* Utility */
+.serif { font-family: 'Playfair Display', Georgia, serif; }

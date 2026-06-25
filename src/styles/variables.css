@@ -1,0 +1,42 @@
+/* ═══════════════════════════════════════
+   India Metro — Design Tokens
+   Theme: Paradise Stay (Light Luxury)
+   ═══════════════════════════════════════ */
+:root {
+  --h:          48px;
+  --panel-w:    320px;
+
+  /* Backgrounds */
+  --bg:         #faf7f2;
+  --bg-card:    #f5f0e8;
+  --bg-card2:   #ede6d8;
+  --bg-input:   #f0ebe0;
+  --bg-white:   #ffffff;
+
+  /* Borders */
+  --border:     rgba(120,80,40,0.12);
+  --border-md:  rgba(120,80,40,0.22);
+
+  /* Text */
+  --text1:      #2c1a0e;
+  --text2:      #6b4c30;
+  --text3:      #9a7858;
+
+  /* Brand accents */
+  --brown:      #5c3a1e;
+  --brown-lt:   #7a5030;
+  --terra:      #a0622a;
+  --terra-lt:   #c47e42;
+  --sand:       #c4a882;
+  --green:      #4a7a4a;
+  --red:        #a03828;
+  --gold:       #c49a40;
+
+  /* Radii */
+  --r:          10px;
+  --r-sm:       7px;
+  --r-lg:       16px;
+
+  /* Transitions */
+  --tr:         0.22s cubic-bezier(.4,0,.2,1);
+}
