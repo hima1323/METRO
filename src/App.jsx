@@ -11,6 +11,7 @@ export default function App() {
   const [currentCity, setCurrentCity] = useState('delhi');
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [routeResult, setRouteResult] = useState(null);
+  const [mapSelected, setMapSelected] = useState(null);
   
   const cityData = METRO_CITIES[currentCity];
 
@@ -56,6 +57,7 @@ export default function App() {
   const handleCityChange = useCallback((newCity) => {
     setCurrentCity(newCity);
     setRouteResult(null);
+    setMapSelected(null);
     clearAnimation();
   }, [clearAnimation]);
 
@@ -72,12 +74,14 @@ export default function App() {
           onFindRoute={handleFindRoute}
           result={routeResult}
           isAnimating={isAnimating}
+          mapSelected={mapSelected}
         />
         
         <MapView 
           cityData={cityData} 
           result={routeResult} 
           animatedPath={animatedPath} 
+          onStationClick={(key, name) => setMapSelected({ key, name, time: Date.now() })}
         />
         
         <AIChat 

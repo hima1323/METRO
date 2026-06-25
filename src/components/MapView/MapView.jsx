@@ -42,7 +42,7 @@ function buildEdgePaths(city) {
 }
 
 /* ── MapView ─────────────────────────── */
-export default function MapView({ cityData, result, animatedPath }) {
+export default function MapView({ cityData, result, animatedPath, onStationClick }) {
   const mapRef = useRef(null);
 
   // Fly to new city on change
@@ -151,6 +151,9 @@ export default function MapView({ cityData, result, animatedPath }) {
               key={key}
               center={coords}
               radius={radius}
+              eventHandlers={{
+                click: () => onStationClick && onStationClick(key, stName)
+              }}
               pathOptions={{
                 fillColor, fillOpacity: fillOpa,
                 color: strokeColor, weight,

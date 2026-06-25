@@ -116,7 +116,7 @@ function StationInput({ id, placeholder, value, onChange, onSelect, stations }) 
 export default function SidePanel({
   collapsed, onToggle,
   cityData, currentCity,
-  onFindRoute, result, isAnimating,
+  onFindRoute, result, isAnimating, mapSelected,
 }) {
   const [srcKey, setSrcKey] = useState('');
   const [srcLabel, setSrcLabel] = useState('');
@@ -130,6 +130,24 @@ export default function SidePanel({
     setSrcKey(''); setSrcLabel('');
     setDestKey(''); setDestLabel('');
   }, [currentCity]);
+
+  // Handle map selection
+  useEffect(() => {
+    if (!mapSelected) return;
+    if (!srcKey) {
+      setSrcKey(mapSelected.key);
+      setSrcLabel(mapSelected.name);
+    } else if (!destKey) {
+      setDestKey(mapSelected.key);
+      setDestLabel(mapSelected.name);
+    } else {
+      // Both filled, replace source and clear dest for a new route query
+      setSrcKey(mapSelected.key);
+      setSrcLabel(mapSelected.name);
+      setDestKey('');
+      setDestLabel('');
+    }
+  }, [mapSelected]);
 
   const handleSwap = () => {
     setSrcKey(destKey);   setSrcLabel(destLabel);
