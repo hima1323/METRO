@@ -111,21 +111,6 @@ export default function MapView({ cityData, result, animatedPath, onStationClick
           ));
         })}
 
-        {/* ── Full Route Highlight (background) ── */}
-        {routeCoords.length > 1 && (
-          <Polyline
-            positions={routeCoords}
-            pathOptions={{ color: '#00c8a0', weight: 8, opacity: 0.25, dashArray: '10 6', lineCap: 'round' }}
-          />
-        )}
-
-        {/* ── Animated Path (on top) ── */}
-        {animCoords.length > 1 && (
-          <Polyline
-            positions={animCoords}
-            pathOptions={{ color: '#00c8a0', weight: 7, opacity: 1, lineCap: 'round', lineJoin: 'round' }}
-          />
-        )}
 
         {/* ── Station Markers ── */}
         {Object.entries(stations).map(([key, s]) => {
@@ -186,8 +171,8 @@ export default function MapView({ cityData, result, animatedPath, onStationClick
           if (i !== 0 && i !== result.path.length - 1) return null;
           const s = stations[key];
           if (!s) return null;
-          const coords = Array.isArray(s[0]) ? s[0] : [s[0], s[1]];
-          const stName = Array.isArray(s[0]) ? s[1] : s[1] || key;
+          const coords = s[0];
+          const stName = s[1] || key;
           return (
             <CircleMarker
               key={`label-${key}`}
@@ -202,7 +187,30 @@ export default function MapView({ cityData, result, animatedPath, onStationClick
           );
         })}
 
+        {/* ── Route Path: glow backdrop ── */}
+        {routeCoords.length > 1 && (
+          <Polyline
+            positions={routeCoords}
+            pathOptions={{ color: '#ff6b00', weight: 14, opacity: 0.22, lineCap: 'round', lineJoin: 'round' }}
+          />
+        )}
+        {/* ── Route Path: solid line ── */}
+        {routeCoords.length > 1 && (
+          <Polyline
+            positions={routeCoords}
+            pathOptions={{ color: '#ff6b00', weight: 6, opacity: 0.55, dashArray: '12 6', lineCap: 'round' }}
+          />
+        )}
+        {/* ── Animated Path: vivid on top ── */}
+        {animCoords.length > 1 && (
+          <Polyline
+            positions={animCoords}
+            pathOptions={{ color: '#ff6b00', weight: 8, opacity: 1, lineCap: 'round', lineJoin: 'round' }}
+          />
+        )}
+
       </MapContainer>
+
 
       <Legend lines={lines} />
     </div>

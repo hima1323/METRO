@@ -7,15 +7,15 @@
   display: flex;
   flex-direction: column;
   transition: width var(--tr), opacity var(--tr);
-  overflow: hidden;
+  overflow: visible; /* allow toggle to stick out */
   position: relative;
 }
 .side-panel.collapsed { width: 0; border: none; opacity: 0; }
 
-/* Panel Toggle */
+/* Panel Toggle — sticks to right edge of sidebar, slides with it */
 .panel-toggle {
   position: absolute;
-  left: var(--panel-w);
+  left: 100%; /* always at the right edge of the aside */
   top: 50%;
   transform: translateY(-50%);
   width: 26px; height: 36px;
@@ -25,20 +25,20 @@
   border-radius: 0 8px 8px 0;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  z-index: 50;
-  transition: left var(--tr), all var(--tr);
+  z-index: 200;
   box-shadow: 2px 0 8px rgba(60,30,10,0.1);
   color: var(--text3);
+  transition: background var(--tr), color var(--tr), border-color var(--tr);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
-.side-panel.collapsed + .map-container .panel-toggle,
-.panel-toggle { left: var(--panel-w); }
-.side-panel.collapsed ~ .panel-toggle { left: 0; }
 .panel-toggle:hover { background: var(--brown); color: #fff; border-color: var(--brown); }
 
 /* Panel inner scroll */
 .panel-inner {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 14px;
   display: flex;
   flex-direction: column;
