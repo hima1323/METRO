@@ -52,6 +52,7 @@ const IcoMapPin = () => (
 const ALGOS = [
   { key: 'dijkstra-cost', label: 'Dijkstra', sub: 'Min Cost',     Icon: IcoRupee },
   { key: 'dijkstra-dist', label: 'Dijkstra', sub: 'Min Distance', Icon: IcoRoad  },
+  { key: 'min-transfers', label: 'Dijkstra', sub: 'Min Transfer', Icon: IcoSwap  },
   { key: 'bfs',           label: 'BFS',      sub: 'Fewest Stops', Icon: IcoGraph },
   { key: 'astar',         label: 'A*',        sub: 'Heuristic',   Icon: IcoTarget},
 ];

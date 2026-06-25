@@ -29,6 +29,7 @@ const IcoCheck = () => (
 const ALGO_LABELS = {
   'dijkstra-cost': 'Min Cost',
   'dijkstra-dist': 'Min Dist',
+  'min-transfers': 'Min Transfer',
   'bfs':           'BFS',
   'astar':         'A*',
 };

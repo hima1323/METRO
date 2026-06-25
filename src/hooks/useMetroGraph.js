@@ -33,7 +33,9 @@ function dijkstra(graph, start, end, weight) {
     visited.add(u);
     if (u === end) break;
     (graph[u] || []).forEach(({ to, dist: edgeDist, cost }) => {
-      const w = weight === 'cost' ? cost : edgeDist;
+      const w = weight === 'cost' ? cost 
+              : weight === 'transfers' ? (edgeDist === 0 ? 10000 : edgeDist)
+              : edgeDist;
       const nd = d + w;
       if (nd < dist[to]) { dist[to] = nd; prev[to] = u; pq.push([nd, to]); }
     });
@@ -115,6 +117,7 @@ export function useMetroGraph() {
     const graph = buildGraph(city);
     if (algo === 'dijkstra-cost') return dijkstra(graph, src, dest, 'cost');
     if (algo === 'dijkstra-dist') return dijkstra(graph, src, dest, 'dist');
+    if (algo === 'min-transfers') return dijkstra(graph, src, dest, 'transfers');
     if (algo === 'bfs') return bfs(graph, src, dest);
     if (algo === 'astar') return aStar(graph, src, dest, city.stations);
     return dijkstra(graph, src, dest, 'cost');
