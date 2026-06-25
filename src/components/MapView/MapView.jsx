@@ -191,21 +191,21 @@ export default function MapView({ cityData, result, animatedPath, onStationClick
         {routeCoords.length > 1 && (
           <Polyline
             positions={routeCoords}
-            pathOptions={{ color: '#ff6b00', weight: 14, opacity: 0.22, lineCap: 'round', lineJoin: 'round' }}
+            pathOptions={{ color: '#ffffff', weight: 14, opacity: 0.22, lineCap: 'round', lineJoin: 'round' }}
           />
         )}
         {/* ── Route Path: solid line ── */}
         {routeCoords.length > 1 && (
           <Polyline
             positions={routeCoords}
-            pathOptions={{ color: '#ff6b00', weight: 6, opacity: 0.55, dashArray: '12 6', lineCap: 'round' }}
+            pathOptions={{ color: '#ffffff', weight: 6, opacity: 0.55, dashArray: '12 6', lineCap: 'round' }}
           />
         )}
         {/* ── Animated Path: vivid on top ── */}
         {animCoords.length > 1 && (
           <Polyline
             positions={animCoords}
-            pathOptions={{ color: '#ff6b00', weight: 8, opacity: 1, lineCap: 'round', lineJoin: 'round' }}
+            pathOptions={{ color: '#ffffff', weight: 8, opacity: 1, lineCap: 'round', lineJoin: 'round' }}
           />
         )}
 

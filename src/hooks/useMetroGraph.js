@@ -12,6 +12,15 @@ function buildGraph(city) {
   return graph;
 }
 
+function getFare(distance) {
+  if (distance <= 2) return 10;
+  if (distance <= 5) return 20;
+  if (distance <= 12) return 30;
+  if (distance <= 21) return 40;
+  if (distance <= 32) return 50;
+  return 60;
+}
+
 function dijkstra(graph, start, end, weight) {
   const dist = {}, prev = {}, visited = new Set();
   Object.keys(graph).forEach(k => { dist[k] = Infinity; prev[k] = null; });
@@ -37,12 +46,7 @@ function dijkstra(graph, start, end, weight) {
     const e = (graph[path[i-1]] || []).find(x => x.to === n);
     return acc + (e ? e.dist : 0);
   }, 0);
-  const totalCost = path.reduce((acc, n, i) => {
-    if (i === 0) return acc;
-    const e = (graph[path[i-1]] || []).find(x => x.to === n);
-    return acc + (e ? e.cost : 0);
-  }, 0);
-  return { path, distance: totalDist, cost: totalCost };
+  return { path, distance: totalDist, cost: getFare(totalDist) };
 }
 
 function bfs(graph, start, end) {
@@ -63,12 +67,7 @@ function bfs(graph, start, end) {
     const e = (graph[path[i-1]] || []).find(x => x.to === n);
     return acc + (e ? e.dist : 0);
   }, 0);
-  const totalCost = path.reduce((acc, n, i) => {
-    if (i === 0) return acc;
-    const e = (graph[path[i-1]] || []).find(x => x.to === n);
-    return acc + (e ? e.cost : 0);
-  }, 0);
-  return { path, distance: totalDist, cost: totalCost };
+  return { path, distance: totalDist, cost: getFare(totalDist) };
 }
 
 function haversine(lat1, lng1, lat2, lng2) {
@@ -103,12 +102,7 @@ function aStar(graph, start, end, stations) {
     const e = (graph[path[i-1]] || []).find(x => x.to === n);
     return acc + (e ? e.dist : 0);
   }, 0);
-  const totalCost = path.reduce((acc, n, i) => {
-    if (i === 0) return acc;
-    const e = (graph[path[i-1]] || []).find(x => x.to === n);
-    return acc + (e ? e.cost : 0);
-  }, 0);
-  return { path, distance: totalDist, cost: totalCost };
+  return { path, distance: totalDist, cost: getFare(totalDist) };
 }
 
 export function useMetroGraph() {

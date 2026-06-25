@@ -57,7 +57,8 @@ export default function RouteResults({ result, algo, cityData }) {
     const name = st ? st[1] : key;
     const lineKey = st ? st[2] : null;
     const lineColor = (lineKey && cityData?.lines?.[lineKey]?.color) || '#8b5e38';
-    return { key, name, lineColor, isFirst: i === 0, isLast: i === result.path.length - 1 };
+    const lineName = (lineKey && cityData?.lines?.[lineKey]?.name) || lineKey;
+    return { key, name, lineKey, lineColor, lineName, isFirst: i === 0, isLast: i === result.path.length - 1 };
   });
 
   return (
@@ -76,19 +77,25 @@ export default function RouteResults({ result, algo, cityData }) {
       </div>
 
       <div className="journey-steps">
-        {steps.map((s, i) => (
-          <div key={s.key} className="j-step" style={{ '--dot-color': s.lineColor }}>
-            <span className="j-dot" style={{ color: s.lineColor, borderColor: s.lineColor }}/>
-            <div>
-              <p className="j-name">{s.name}</p>
-              {s.isFirst && <p className="j-info">Boarding</p>}
-              {s.isLast  && <p className="j-info">Destination</p>}
-              {!s.isFirst && !s.isLast && i % 4 === 0 && (
-                <span className="j-change">Continue</span>
-              )}
+        {steps.map((s, i) => {
+          const prev = i > 0 ? steps[i - 1] : null;
+          const isChange = prev && prev.lineKey && s.lineKey && prev.lineKey !== s.lineKey;
+          
+          return (
+            <div key={s.key} className="j-step" style={{ '--dot-color': s.lineColor }}>
+              <span className="j-dot" style={{ color: s.lineColor, borderColor: s.lineColor }}/>
+              <div>
+                <p className="j-name">{s.name}</p>
+                {s.isFirst && <p className="j-info">Boarding at {s.lineName}</p>}
+                {s.isLast  && <p className="j-info">Destination</p>}
+                {isChange && <span className="j-change" style={{ color: s.lineColor }}>Change to {s.lineName}</span>}
+                {!s.isFirst && !s.isLast && !isChange && i % 4 === 0 && (
+                  <span className="j-change">Continue</span>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
