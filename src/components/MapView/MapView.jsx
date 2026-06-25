@@ -111,40 +111,40 @@ export default function MapView({ cityData, result, animatedPath, onStationClick
           ));
         })}
 
-        {/* ── Full Route Highlight ── */}
+        {/* ── Full Route Highlight (background) ── */}
         {routeCoords.length > 1 && (
           <Polyline
             positions={routeCoords}
-            pathOptions={{ color: '#2c1a0e', weight: 6, opacity: 0.25, dashArray: '8 4' }}
+            pathOptions={{ color: '#00c8a0', weight: 8, opacity: 0.25, dashArray: '10 6', lineCap: 'round' }}
           />
         )}
 
-        {/* ── Animated Path ── */}
+        {/* ── Animated Path (on top) ── */}
         {animCoords.length > 1 && (
           <Polyline
             positions={animCoords}
-            pathOptions={{ color: '#c47e42', weight: 6, opacity: 0.95, lineCap: 'round' }}
+            pathOptions={{ color: '#00c8a0', weight: 7, opacity: 1, lineCap: 'round', lineJoin: 'round' }}
           />
         )}
 
         {/* ── Station Markers ── */}
         {Object.entries(stations).map(([key, s]) => {
-          const coords = Array.isArray(s[0]) ? s[0] : [s[0], s[1]];
-          const name   = Array.isArray(s[0]) ? s[0+1] || s[2] : null;
-          const stName = s[0] && !Array.isArray(s[0]) ? s[1] : (s[1] || key);
-          const lineKey = Array.isArray(s[0]) ? s[2] : s[1];
-          const color  = lines[lineKey]?.color || '#8b5e38';
+          // Data format: [[lat, lng], 'Name', 'lineKey']
+          const coords  = s[0]; // always an array [lat, lng]
+          const stName  = s[1] || key;
+          const lineKey = s[2];
+          const color   = lines[lineKey]?.color || '#8b5e38';
 
-          const isOnRoute = routeSet.has(key);
+          const isOnRoute  = routeSet.has(key);
           const isAnimated = animSet.has(key);
-          const isTerminus = animatedPath?.[0] === key || animatedPath?.[animatedPath.length-1] === key;
           const isRouteEnd = result?.path?.[0] === key || result?.path?.[result.path.length-1] === key;
 
-          const radius  = isRouteEnd ? 9 : isOnRoute ? 7 : 5;
-          const fillColor = isAnimated ? '#c47e42' : isOnRoute ? '#2c1a0e' : color;
-          const fillOpa = isAnimated ? 1 : isOnRoute ? 0.9 : 1;
-          const weight = isRouteEnd ? 3 : isOnRoute ? 2 : 1.5;
-          const strokeColor = isRouteEnd ? '#fff' : '#fff';
+          // Bigger & brighter markers for route stations
+          const radius    = isRouteEnd ? 10 : isOnRoute ? 8 : 5;
+          const fillColor = isRouteEnd ? '#00c8a0' : isAnimated ? '#00e5bb' : isOnRoute ? '#00b891' : color;
+          const fillOpa   = isAnimated || isOnRoute ? 1 : 0.95;
+          const weight    = isRouteEnd ? 3 : isOnRoute ? 2 : 1.5;
+          const strokeColor = '#fff';
 
           return (
             <LayerGroup key={key}>

@@ -52,15 +52,11 @@ export default function RouteResults({ result, algo, cityData }) {
 
   // Build journey steps with line info
   const steps = result.path.map((key, i) => {
-    const name = stations[key]?.[0] || key;
-    const coords = stations[key];
-    // Detect line from cityData.lines
-    let lineColor = '#8b5e38';
-    if (cityData?.lines) {
-      for (const [, line] of Object.entries(cityData.lines)) {
-        if (line.stations?.includes(key)) { lineColor = line.color; break; }
-      }
-    }
+    const st = stations[key];
+    // Format: [[lat,lng], 'Name', 'lineKey'] — index 1 is name, index 2 is lineKey
+    const name = st ? st[1] : key;
+    const lineKey = st ? st[2] : null;
+    const lineColor = (lineKey && cityData?.lines?.[lineKey]?.color) || '#8b5e38';
     return { key, name, lineColor, isFirst: i === 0, isLast: i === result.path.length - 1 };
   });
 
