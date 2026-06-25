@@ -1,7 +1,7 @@
 import { useEffect, useRef, useMemo } from 'react';
 import {
   MapContainer, TileLayer,
-  Polyline, CircleMarker, Tooltip
+  Polyline, CircleMarker, Tooltip, LayerGroup
 } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -147,27 +147,37 @@ export default function MapView({ cityData, result, animatedPath, onStationClick
           const strokeColor = isRouteEnd ? '#fff' : '#fff';
 
           return (
-            <CircleMarker
-              key={key}
-              center={coords}
-              radius={radius}
-              eventHandlers={{
-                click: () => onStationClick && onStationClick(key, stName)
-              }}
-              pathOptions={{
-                fillColor, fillOpacity: fillOpa,
-                color: strokeColor, weight,
-              }}
-            >
-              <Tooltip direction="top" offset={[0, -8]} opacity={0.95}>
-                <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.8rem', fontWeight: 600 }}>
-                  {stName}
-                  {isRouteEnd && <span style={{ display:'block', fontSize:'0.65rem', color:'#9a7858', fontWeight:400 }}>
-                    {result?.path?.[0] === key ? 'Departure' : 'Arrival'}
-                  </span>}
-                </div>
-              </Tooltip>
-            </CircleMarker>
+            <LayerGroup key={key}>
+              {/* Invisible Hit Area for Easier Clicking */}
+              <CircleMarker
+                center={coords}
+                radius={24}
+                pathOptions={{ opacity: 0, fillOpacity: 0 }}
+                eventHandlers={{
+                  click: () => onStationClick && onStationClick(key, stName)
+                }}
+              />
+              
+              {/* Visible Marker */}
+              <CircleMarker
+                center={coords}
+                radius={radius}
+                pathOptions={{
+                  fillColor, fillOpacity: fillOpa,
+                  color: strokeColor, weight,
+                }}
+                interactive={false}
+              >
+                <Tooltip direction="top" offset={[0, -8]} opacity={0.95}>
+                  <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.8rem', fontWeight: 600 }}>
+                    {stName}
+                    {isRouteEnd && <span style={{ display:'block', fontSize:'0.65rem', color:'#9a7858', fontWeight:400 }}>
+                      {result?.path?.[0] === key ? 'Departure' : 'Arrival'}
+                    </span>}
+                  </div>
+                </Tooltip>
+              </CircleMarker>
+            </LayerGroup>
           );
         })}
 
