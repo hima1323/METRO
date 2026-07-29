@@ -107,19 +107,26 @@ function SettingsPanel({ aiCfg, onSave, onClose }) {
       <div className="cfg-group">
         <label>Backend Provider</label>
         <select value={cfg.backend} onChange={e => setCfg({...cfg, backend: e.target.value})}>
-          <option value="auto">Auto-detect (Ollama, then Groq, then Rule)</option>
-          <option value="ollama">Ollama (Local)</option>
-          <option value="groq">Groq (Cloud API)</option>
+          <option value="gemini">Google Gemini (AI Studio)</option>
           <option value="rule">Rule-based (No AI)</option>
         </select>
       </div>
       <div className="cfg-group">
-        <label>Ollama URL (Local)</label>
-        <input type="text" value={cfg.ollamaUrl} onChange={e => setCfg({...cfg, ollamaUrl: e.target.value})} placeholder="http://localhost:11434" />
+        <label>Gemini API Key</label>
+        <input
+          type="password"
+          value={cfg.geminiKey || ''}
+          onChange={e => setCfg({...cfg, geminiKey: e.target.value})}
+          placeholder="Paste Google AI Studio key"
+        />
       </div>
       <div className="cfg-group">
-        <label>Groq API Key</label>
-        <input type="password" value={cfg.groqKey} onChange={e => setCfg({...cfg, groqKey: e.target.value})} placeholder="gsk_..." />
+        <label>Gemini Model</label>
+        <select value={cfg.geminiModel || 'gemini-2.0-flash'} onChange={e => setCfg({...cfg, geminiModel: e.target.value})}>
+          <option value="gemini-2.0-flash">gemini-2.0-flash (Fast)</option>
+          <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+          <option value="gemini-1.5-pro">gemini-1.5-pro (Smart)</option>
+        </select>
       </div>
       <button className="cfg-save-btn" onClick={() => { onSave(cfg); onClose(); }}>
         <IcoSave /> Save Settings
@@ -147,9 +154,7 @@ export default function AIChat({ chat, onApplyRoute }) {
     setInput('');
   };
 
-  const badgeText = aiCfg.backend === 'ollama' ? 'Ollama (local)' :
-                    aiCfg.backend === 'groq'   ? 'Groq (cloud)' :
-                    aiCfg.backend === 'rule'   ? 'Rule-based' : 'Auto-detect';
+  const badgeText = aiCfg.backend === 'rule' ? 'Rule-based' : 'Gemini AI';
 
   return (
     <>
