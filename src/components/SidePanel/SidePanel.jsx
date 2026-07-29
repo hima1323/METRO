@@ -118,6 +118,7 @@ export default function SidePanel({
   collapsed, onToggle,
   cityData, currentCity,
   onFindRoute, result, isAnimating, mapSelected,
+  externalRoute,   // { srcKey, srcLabel, destKey, destLabel } from AI chat
 }) {
   const [srcKey, setSrcKey] = useState('');
   const [srcLabel, setSrcLabel] = useState('');
@@ -149,6 +150,15 @@ export default function SidePanel({
       setDestLabel('');
     }
   }, [mapSelected]);
+
+  // Handle AI "Show on Map" — fill search boxes from AI result
+  useEffect(() => {
+    if (!externalRoute) return;
+    setSrcKey(externalRoute.srcKey);
+    setSrcLabel(externalRoute.srcLabel);
+    setDestKey(externalRoute.destKey);
+    setDestLabel(externalRoute.destLabel);
+  }, [externalRoute]);
 
   const handleSwap = () => {
     setSrcKey(destKey);   setSrcLabel(destLabel);

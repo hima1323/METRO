@@ -12,6 +12,7 @@ export default function App() {
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [routeResult, setRouteResult] = useState(null);
   const [mapSelected, setMapSelected] = useState(null);
+  const [externalRoute, setExternalRoute] = useState(null);
   
   const cityData = METRO_CITIES[currentCity];
 
@@ -49,10 +50,18 @@ export default function App() {
   });
 
   const handleApplyRoute = useCallback(async (src, dest) => {
-    // When user clicks "Show on Map" from AI chat
+    // Expand sidebar, populate search boxes, show route on map
     setPanelCollapsed(false);
+    const stations = METRO_CITIES[currentCity]?.stations || {};
+    setExternalRoute({
+      srcKey:   src,
+      srcLabel: stations[src]?.[1]  || src,
+      destKey:  dest,
+      destLabel: stations[dest]?.[1] || dest,
+      _ts: Date.now(),   // force effect re-run even if same keys
+    });
     await handleFindRoute(src, dest, 'dijkstra-cost');
-  }, [handleFindRoute]);
+  }, [handleFindRoute, currentCity]);
 
   const handleCityChange = useCallback((newCity) => {
     setCurrentCity(newCity);
@@ -75,6 +84,7 @@ export default function App() {
           result={routeResult}
           isAnimating={isAnimating}
           mapSelected={mapSelected}
+          externalRoute={externalRoute}
         />
         
         <MapView 
