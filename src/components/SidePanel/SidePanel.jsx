@@ -118,7 +118,7 @@ export default function SidePanel({
   collapsed, onToggle,
   cityData, currentCity,
   onFindRoute, result, isAnimating, mapSelected,
-  externalRoute,   // { srcKey, srcLabel, destKey, destLabel } from AI chat
+  externalRoute,
 }) {
   const [srcKey, setSrcKey] = useState('');
   const [srcLabel, setSrcLabel] = useState('');
@@ -132,6 +132,21 @@ export default function SidePanel({
     setSrcKey(''); setSrcLabel('');
     setDestKey(''); setDestLabel('');
   }, [currentCity]);
+
+  // Populate from AI chat "Show on Map"
+  useEffect(() => {
+    if (!externalRoute || !cityData) return;
+    const { src, dest } = externalRoute;
+    const stations = cityData.stations;
+    if (src && stations[src]) {
+      setSrcKey(src);
+      setSrcLabel(stations[src][1] || src);
+    }
+    if (dest && stations[dest]) {
+      setDestKey(dest);
+      setDestLabel(stations[dest][1] || dest);
+    }
+  }, [externalRoute]);
 
   // Handle map selection
   useEffect(() => {
@@ -150,15 +165,6 @@ export default function SidePanel({
       setDestLabel('');
     }
   }, [mapSelected]);
-
-  // Handle AI "Show on Map" — fill search boxes from AI result
-  useEffect(() => {
-    if (!externalRoute) return;
-    setSrcKey(externalRoute.srcKey);
-    setSrcLabel(externalRoute.srcLabel);
-    setDestKey(externalRoute.destKey);
-    setDestLabel(externalRoute.destLabel);
-  }, [externalRoute]);
 
   const handleSwap = () => {
     setSrcKey(destKey);   setSrcLabel(destLabel);

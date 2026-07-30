@@ -50,18 +50,14 @@ export default function App() {
   });
 
   const handleApplyRoute = useCallback(async (src, dest) => {
-    // Expand sidebar, populate search boxes, show route on map
+    // When user clicks "Show on Map" from AI chat:
+    // 1. Populate the sidebar search boxes
+    setExternalRoute({ src, dest, ts: Date.now() });
+    // 2. Open the sidebar so the user can see the fields
     setPanelCollapsed(false);
-    const stations = METRO_CITIES[currentCity]?.stations || {};
-    setExternalRoute({
-      srcKey:   src,
-      srcLabel: stations[src]?.[1]  || src,
-      destKey:  dest,
-      destLabel: stations[dest]?.[1] || dest,
-      _ts: Date.now(),   // force effect re-run even if same keys
-    });
+    // 3. Run the route and show it on the map
     await handleFindRoute(src, dest, 'dijkstra-cost');
-  }, [handleFindRoute, currentCity]);
+  }, [handleFindRoute]);
 
   const handleCityChange = useCallback((newCity) => {
     setCurrentCity(newCity);
